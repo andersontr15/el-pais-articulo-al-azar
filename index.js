@@ -44,7 +44,7 @@ const getRandomArticle = async () => {
     elPaisHomePage,
     elPaisHomePage(SELECTORS.MEGA_MENU),
   );
-  const randomHomePageHeader = `https:${
+  const randomHomePageHeader = `http:${
     homePageHeaders[getRandomInt(0, homePageHeaders.length - 1)]
   }`;
   if (!randomHomePageHeader) throw new Error(ERRORS.TRY_AGAIN);
@@ -57,7 +57,7 @@ const getRandomArticle = async () => {
     elPaisCategoryHomePage,
     elPaisCategoryHomePage(SELECTORS.CATEGORY_MENU),
   );
-  const randomCategoryHomePageHeader = `https:${
+  const randomCategoryHomePageHeader = `http:${
     categoryHomePageHeaders[getRandomInt(0, categoryHomePageHeaders.length - 1)]
   }`;
   if (!randomCategoryHomePageHeader) throw new Error(ERRORS.TRY_AGAIN);
