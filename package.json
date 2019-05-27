@@ -1,6 +1,6 @@
 {
   "name": "el_pais_articulo_al_azar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Programa simple para abrir en tu navegador un articulo aleatorio de elpais.com",
   "main": "index.js",
   "scripts": {
