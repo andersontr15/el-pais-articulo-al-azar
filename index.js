@@ -39,6 +39,7 @@ const getLinks = (cheerioScope, cheerioObject) =>
   cheerioObject.map((idex, header) => cheerioScope(header).attr('href'));
 
 const getRandomArticle = async () => {
+  console.log('FETCHING YOUR ARTICLE...')
   const elPaisHomePage = await requestPromise(REQUEST_OPTIONS);
   const homePageHeaders = getLinks(
     elPaisHomePage,
@@ -68,7 +69,7 @@ const getRandomArticle = async () => {
       : process.platform == PLATFORMS.WIN32
       ? COMMANDS.START
       : PLATFORMS.XDG;
-
+  console.log('OPENING ARTICLE NOW..')
   childProcess.exec(`${startCommand} ${randomCategoryHomePageHeader}`);
 };
 
