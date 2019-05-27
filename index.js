@@ -1,17 +1,34 @@
+const childProcess = require('child_process');
 const request = require('request');
 const cheerio = require('cheerio');
+
+const COMMANDS = {
+  OPEN: 'open',
+  START: 'start',
+  XDG: 'xdg-open',
+};
+
+const ERRORS = {
+  TRY_AGAIN: 'Sorry, please try again.',
+};
+
+const PLATFORMS = {
+  DARWIN: 'darwin',
+  WIN32: 'win32',
+};
+
+const SELECTORS = {
+  CATEGORY_MENU: '.seccion-submenu-navegacion ul li a',
+  MEGA_MENU: 'nav ul li a',
+};
+
+const BASE_URL = 'https://elpais.com';
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min)) + min;
 };
-
-const SELECTORS = {
-  MEGA_MENU: '.seccion-submenu-navegacion-listado li a',
-};
-
-const BASE_URL = 'https://elpais.com';
 
 const getHeaderLink = body => {
   const $ = cheerio.load(body);
@@ -21,37 +38,47 @@ const getHeaderLink = body => {
   const headerLinks = headers.map((idex, header) => $(header).attr('href'));
 
   const randomHeader = `https:${
-    headerLinks[getRandomInt(0, headerLinks.length - 1)]
+    headerLinks[getRandomInt(0, headerLinks.length)]
   }`;
 
   return randomHeader;
 };
 
-request(BASE_URL, (err, res, body) => {
-  let headerLink;
-  if (err) {
-    throw new Error('Sorry, please try again.');
-  }
-  headerLink = getHeaderLink(body);
+const getCategoryHeaderLink = body => {
+  const $ = cheerio.load(body);
 
-  headerLink = headerLink.includes(BASE_URL)
-    ? headerLink
-    : `${BASE_URL}/${headerLink}`;
+  const headers = $(SELECTORS.CATEGORY_MENU);
 
-  request(headerLink, async (err, res, body) => {
-    headerLink = getHeaderLink(body);
-    if(!headerLink) {
-      console.log('Sorry please try again');
-      return;
+  const headerLinks = headers.map((idex, header) => $(header).attr('href'));
+
+  const randomHeader = `https:${
+    headerLinks[getRandomInt(0, headerLinks.length)]
+  }`;
+
+  return randomHeader;
+};
+
+module.exports = () => {
+  request(BASE_URL, (err, res, body) => {
+    let baseHeaderLink;
+    let categoryHeaderLink;
+    if (err) {
+      throw new Error(ERRORS.TRY_AGAIN);
     }
-    const start =
-      process.platform == 'darwin'
-        ? 'open'
-        : process.platform == 'win32'
-        ? 'start'
-        : 'xdg-open';
-    require('child_process').exec(start + ' ' + headerLink);
+    baseHeaderLink = getHeaderLink(body);
+    request(baseHeaderLink, (err, res, body) => {
+      categoryHeaderLink = getCategoryHeaderLink(body);
+      if (!categoryHeaderLink) {
+        console.log(ERRORS.TRY_AGAIN);
+        return;
+      }
+      const start =
+        process.platform == PLATFORMS.DARWIN
+          ? COMMANDS.OPEN
+          : process.platform == PLATFORMS.WIN32
+          ? COMMANDS.START
+          : PLATFORMS.XDG;
+      childProcess.exec(`${start} ${categoryHeaderLink}`);
+    });
   });
-});
-
-
+};
