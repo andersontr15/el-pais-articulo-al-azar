@@ -1,17 +1,22 @@
 {
-  "name": "random_el_pais_article",
+  "name": "el_pais_articulo_al_azar",
   "version": "1.0.0",
-  "description": "",
+  "description": "Programa simple para abrir en tu navegador un articulo aleatorio de elpais.com",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "el país",
+    "articulos al azar",
+    "articulos de el país",
+    "web scraping"
+  ],
+  "author": "Theodore Anderson",
+  "license": "MIT",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "open": "^6.3.0",
-    "request": "^2.88.0"
+    "cheerio": "1.0.0-rc.3",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   }
 }
